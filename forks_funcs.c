@@ -6,7 +6,7 @@
 /*   By: aakherra <aakherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 17:45:52 by aakherra          #+#    #+#             */
-/*   Updated: 2025/04/12 18:43:34 by aakherra         ###   ########.fr       */
+/*   Updated: 2025/04/13 20:07:13 by aakherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,38 +30,27 @@ int	init_mutex(t_data *p, t_info *info)
 	return (0);
 }
 
-int	handle_one_philo(t_philo *philo)
-{
-	while (!is_died_full(philo))
-		usleep(100);
-	return (1);
-}
-
 int	helper(t_philo *philo)
 {
-	while (pthread_mutex_lock(philo->left_fork))
-	{
-		if (is_died_full(philo))
-			return (1);
-		usleep(100);
-	}
-	if (print_philo_state("has taken a fork", philo, 100))
-		return (1);
+	pthread_mutex_lock(philo->left_fork);
+	// if (is_died_full(philo))
+	// 	return (1);
+	print_philo_state("has taken a fork", philo, 0);
 	philo->has_left_fork = true;
 	if (philo->info->num_of_philos > 1)
 	{
-		while (pthread_mutex_lock(philo->right_fork))
-		{
-			if (is_died_full(philo))
-				return (1);
-			usleep(100);
-		}
-		if (print_philo_state("has taken a fork", philo, 100))
-			return (1);
+		pthread_mutex_lock(philo->right_fork);
+		// if (is_died_full(philo))
+		// 	return (1);
+		print_philo_state("has taken a fork", philo, 0);
 		philo->has_right_fork = true;
 	}
 	else
-		return (handle_one_philo(philo));
+	{
+		while (!is_died_full(philo))
+			;
+		return (1);
+	}
 	return (0);
 }
 
@@ -69,23 +58,17 @@ int	pick_up_fork(t_philo *philo)
 {
 	if (philo->philo_id % 2)
 	{
-		while (pthread_mutex_lock(philo->right_fork))
-		{
-			if (is_died_full(philo))
-				return (1);
-			usleep(100);
-		}
-		if (print_philo_state("has taken a fork", philo, 100))
-			return (1);
+		pthread_mutex_lock(philo->right_fork);
+		// if (is_died_full(philo))
+		// 	return (1);
+		// usleep(100);
+		print_philo_state("has taken a fork", philo, 0);
 		philo->has_right_fork = true;
-		while (pthread_mutex_lock(philo->left_fork))
-		{
-			if (is_died_full(philo))
-				return (1);
-			usleep(100);
-		}
-		if (print_philo_state("has taken a fork", philo, 100))
-			return (1);
+		pthread_mutex_lock(philo->left_fork);
+		// if (is_died_full(philo))
+		// 	return (1);
+		// usleep(100);
+		print_philo_state("has taken a fork", philo, 0);
 		philo->has_left_fork = true;
 	}
 	else

@@ -6,7 +6,7 @@
 /*   By: aakherra <aakherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 12:36:20 by aakherra          #+#    #+#             */
-/*   Updated: 2025/04/12 18:45:06 by aakherra         ###   ########.fr       */
+/*   Updated: 2025/04/13 18:37:49 by aakherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,15 +69,21 @@ int	create_threads(t_data *p, t_info *info)
 		return (1);
 	i = 0;
 	while (i < info->num_of_philos)
+		init_philos(p, info, i++);
+	i = 0;
+	pthread_mutex_lock(&info->mutex);
+	if (pthread_create(&(p->monitor_id), NULL, &do_monitor, p->philos))
+		return (1);
+	while (i < info->num_of_philos)
 	{
-		init_philos(p, info, i);
 		if (pthread_create(&(p->philos[i].thread_id), NULL,
 				&do_routine, &(p->philos[i])))
 			return (1);
 		i++;
 	}
-	if (pthread_create(&(p->monitor_id), NULL, &do_monitor, p->philos))
-		return (1);
+	init_time(p->philos);
+	info->start_simulation = true;
+	pthread_mutex_unlock(&info->mutex);
 	return (join_and_free(p));
 }
 
