@@ -6,7 +6,7 @@
 /*   By: aakherra <aakherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 17:50:20 by aakherra          #+#    #+#             */
-/*   Updated: 2025/04/13 20:05:27 by aakherra         ###   ########.fr       */
+/*   Updated: 2025/04/18 10:12:18 by aakherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,13 @@ int	print_eat_state(char *state, t_philo *p, long sleep_time)
 {
 	long timestamp;
 
+	if (is_died_full(p))
+		return (1);
 	timestamp = get_time() - p->info->start_time;
-	// if (is_died_full(p))
-	// 	return (1);
 	pthread_mutex_lock(&p->info->mutex);
 	printf("%ld %d %s\n", timestamp, p->philo_id + 1, state);
-	set_philo_info(p, timestamp);
 	pthread_mutex_unlock(&p->info->mutex);
+	set_philo_info(p, timestamp);
 	usleep(sleep_time);
 	return (0);
 }
@@ -75,10 +75,12 @@ void	*do_routine(void *arg)
 	t_philo	*philo;
 
 	philo = arg;
-	pthread_mutex_lock(&philo->info->mutex);
-	pthread_mutex_unlock(&philo->info->mutex);
+	start(philo);
 	while (!died && !full)
 	{
+		if (print_philo_state("is thinking", philo,
+				philo->info->time_to_think * 1000))
+			break ;
 		if (pick_up_fork(philo))
 			break ;
 		if (print_eat_state("is eating", philo,
@@ -88,9 +90,6 @@ void	*do_routine(void *arg)
 		if (print_philo_state("is sleeping", philo,
 				philo->info->time_to_sleep * 1000))
 			break ;
-		if (print_philo_state("is thinking", philo, 0))
-			break ;
-		get_info(philo, &died, &full);
 	}
 	return (arg);
 }

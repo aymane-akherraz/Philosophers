@@ -6,7 +6,7 @@
 /*   By: aakherra <aakherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 12:49:35 by aakherra          #+#    #+#             */
-/*   Updated: 2025/04/13 19:57:36 by aakherra         ###   ########.fr       */
+/*   Updated: 2025/04/18 10:12:00 by aakherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct info
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
+	int				time_to_think;
 	bool			start_simulation;
 	long			start_time;
 	bool			philo_died;
@@ -62,15 +63,14 @@ int		print_philo_state(char *state, t_philo *p, long sleep_time);
 int		init_mutex(t_data *p, t_info *info);
 int		pick_up_fork(t_philo *philo);
 int		monitor_philos(t_philo *philos, int i, long my_var, bool *full);
-void	start(t_philo *philo, bool *died, bool *full);
 void	set_philo_info(t_philo *philo, long timestamp);
 void	*do_routine(void *arg);
+void	start(t_philo *philos);
 void	put_down_fork(t_philo *philo);
 void	*do_monitor(void *arg);
 long	ft_atoi(const char *s);
 long	get_time(void);
 void	init_time(t_philo *philos);
-void	get_info(t_philo *philo, bool *died, bool *full);
 size_t	ft_strlen(char *s);
 
 #endif

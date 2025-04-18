@@ -6,7 +6,7 @@
 /*   By: aakherra <aakherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 17:50:38 by aakherra          #+#    #+#             */
-/*   Updated: 2025/04/12 18:44:03 by aakherra         ###   ########.fr       */
+/*   Updated: 2025/04/18 09:05:50 by aakherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,4 @@ long	get_time(void)
 	if (gettimeofday(&tv, NULL))
 		return (-1);
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
-}
-
-void	get_info(t_philo *philo, bool *died, bool *full)
-{
-	pthread_mutex_lock(&philo->info->mutex);
-	*died = philo->info->philo_died;
-	*full = philo->info->full;
-	pthread_mutex_unlock(&philo->info->mutex);
 }

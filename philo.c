@@ -6,7 +6,7 @@
 /*   By: aakherra <aakherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 12:36:20 by aakherra          #+#    #+#             */
-/*   Updated: 2025/04/13 18:37:49 by aakherra         ###   ########.fr       */
+/*   Updated: 2025/04/18 10:53:10 by aakherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,11 +67,18 @@ int	create_threads(t_data *p, t_info *info)
 	}
 	if (init_mutex(p, info))
 		return (1);
+	info->time_to_think = 0;
 	i = 0;
 	while (i < info->num_of_philos)
 		init_philos(p, info, i++);
 	i = 0;
-	pthread_mutex_lock(&info->mutex);
+	if (info->num_of_philos % 2)
+	{
+		if (info->time_to_eat == info->time_to_sleep)
+			info->time_to_think = info->time_to_eat / 2;
+		else if (info->time_to_eat > info->time_to_sleep)
+			info->time_to_think = info->time_to_eat;
+	}
 	if (pthread_create(&(p->monitor_id), NULL, &do_monitor, p->philos))
 		return (1);
 	while (i < info->num_of_philos)
@@ -82,6 +89,7 @@ int	create_threads(t_data *p, t_info *info)
 		i++;
 	}
 	init_time(p->philos);
+	pthread_mutex_lock(&info->mutex);
 	info->start_simulation = true;
 	pthread_mutex_unlock(&info->mutex);
 	return (join_and_free(p));
