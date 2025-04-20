@@ -6,7 +6,7 @@
 /*   By: aakherra <aakherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 12:36:20 by aakherra          #+#    #+#             */
-/*   Updated: 2025/04/18 10:53:10 by aakherra         ###   ########.fr       */
+/*   Updated: 2025/04/20 10:45:11 by aakherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,11 @@ int	join_and_free(t_data *p)
 {
 	int	i;
 
-	if (pthread_join(p->monitor_id, NULL))
-		return (1);
+	pthread_join(p->monitor_id, NULL);
 	i = 0;
 	while (i < p->philos->info->num_of_philos)
 	{
-		if (pthread_join(p->philos[i].thread_id, NULL))
-			return (1);
+		pthread_join(p->philos[i].thread_id, NULL);
 		i++;
 	}
 	i = 0;
@@ -32,7 +30,7 @@ int	join_and_free(t_data *p)
 		pthread_mutex_destroy(&(p->philos[i].mutex));
 		i++;
 	}
-	pthread_mutex_destroy(&(p->philos->info->mutex));
+	c(&(p->philos->info->mutex));
 	free(p->philos);
 	free(p->forks);
 	return (0);
@@ -61,10 +59,7 @@ int	create_threads(t_data *p, t_info *info)
 		return (1);
 	p->forks = malloc(sizeof(pthread_mutex_t) * info->num_of_philos);
 	if (!(p->forks))
-	{
-		free(p->philos);
-		return (1);
-	}
+		return (free_philos(p->philos));
 	if (init_mutex(p, info))
 		return (1);
 	info->time_to_think = 0;
@@ -80,12 +75,14 @@ int	create_threads(t_data *p, t_info *info)
 			info->time_to_think = info->time_to_eat;
 	}
 	if (pthread_create(&(p->monitor_id), NULL, &do_monitor, p->philos))
-		return (1);
+	{
+		destroy_and_free(p, info);
+		return (1);		
+	}
 	while (i < info->num_of_philos)
 	{
-		if (pthread_create(&(p->philos[i].thread_id), NULL,
-				&do_routine, &(p->philos[i])))
-			return (1);
+		pthread_create(&(p->philos[i].thread_id), NULL,
+				&do_routine, &(p->philos[i]));
 		i++;
 	}
 	init_time(p->philos);

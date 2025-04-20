@@ -6,7 +6,7 @@
 /*   By: aakherra <aakherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 17:45:52 by aakherra          #+#    #+#             */
-/*   Updated: 2025/04/18 08:52:27 by aakherra         ###   ########.fr       */
+/*   Updated: 2025/04/20 10:18:42 by aakherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,22 @@ int	init_mutex(t_data *p, t_info *info)
 	while (i < info->num_of_philos)
 	{
 		if (pthread_mutex_init(&(p->forks[i]), NULL))
+		{
+			destroy_forks(p->forks, i - 1);
 			return (1);
+		}
 		if (pthread_mutex_init(&(p->philos[i].mutex), NULL))
-			return (1);
+		{
+			destroy_philos(p->philos, i - 1);
+			return (1);			
+		}
 		i++;
 	}
 	if (pthread_mutex_init(&(info->mutex), NULL))
+	{
+		destroy_forks(p, info);
 		return (1);
+	}
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: aakherra <aakherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 17:39:33 by aakherra          #+#    #+#             */
-/*   Updated: 2025/04/18 10:22:49 by aakherra         ###   ########.fr       */
+/*   Updated: 2025/04/20 10:51:03 by aakherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,20 @@ void	init_time(t_philo *philos)
 	}
 }
 
-int	monitor_philos(t_philo *philos, int i, long my_var, bool *full)
+void	check_full(t_philo *philos, long meals_count, bool *full, int i)
+{
+	pthread_mutex_lock(&philos[i].mutex);
+	meals_count = philos[i].meals_count;
+	pthread_mutex_unlock(&philos[i].mutex);
+	if (meals_count < philos->info->num_of_meals)
+		*full = false;
+}
+
+int	monitor_philos(t_philo *philos, int i, long meals_count, bool *full)
 {
 	long timestamp;
 	long	last;
+
 	while (i < philos->info->num_of_philos)
 	{
 		pthread_mutex_lock(&philos[i].mutex);
@@ -47,13 +57,7 @@ int	monitor_philos(t_philo *philos, int i, long my_var, bool *full)
 			return (1);
 		}
 		if (philos->info->num_of_meals > 0)
-		{
-			pthread_mutex_lock(&philos[i].mutex);
-			my_var = philos[i].meals_count;
-			pthread_mutex_unlock(&philos[i].mutex);
-			if (my_var < philos->info->num_of_meals)
-				*full = false;
-		}
+			check_full(philos, meals_count, full, i);
 		i++;
 	}
 	return (0);
@@ -78,19 +82,19 @@ void	*do_monitor(void *arg)
 {
 	int		i;
 	bool	full;
-	long	my_var;
+	long	meals_count;
 	t_philo	*philos;
 
 	philos = arg;
 	start(philos);
 	full = false;
-	my_var = 0;
+	meals_count = 0;
 	while (!full)
 	{
 		i = 0;
 		if (philos->info->num_of_meals > 0)
 			full = true;
-		if (monitor_philos(philos, i, my_var, &full))
+		if (monitor_philos(philos, i, meals_count, &full))
 			return (arg);
 	}
 	pthread_mutex_lock(&philos->info->mutex);
