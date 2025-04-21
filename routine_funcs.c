@@ -6,7 +6,7 @@
 /*   By: aakherra <aakherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 17:50:20 by aakherra          #+#    #+#             */
-/*   Updated: 2025/04/21 15:45:17 by aakherra         ###   ########.fr       */
+/*   Updated: 2025/04/21 16:05:47 by aakherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	print_eat_state(char *state, t_philo *p, long sleep_time)
 	pthread_mutex_lock(&p->info->mutex);
 	printf("%ld %d %s\n", timestamp, p->philo_id + 1, state);
 	pthread_mutex_unlock(&p->info->mutex);
-	set_philo_info(p, timestamp + sleep_time);
+	set_philo_info(p, timestamp);
 	usleep(sleep_time);
 	return (0);
 }
