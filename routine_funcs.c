@@ -6,7 +6,7 @@
 /*   By: aakherra <aakherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 17:50:20 by aakherra          #+#    #+#             */
-/*   Updated: 2025/04/19 10:11:40 by aakherra         ###   ########.fr       */
+/*   Updated: 2025/04/21 15:45:17 by aakherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	set_philo_info(t_philo *philo, long last_meal_time)
 
 int	print_eat_state(char *state, t_philo *p, long sleep_time)
 {
-	long timestamp;
+	long	timestamp;
 
 	if (is_died_full(p))
 		return (1);
@@ -70,12 +70,14 @@ int	print_eat_state(char *state, t_philo *p, long sleep_time)
 
 void	*do_routine(void *arg)
 {
-	bool	died = 0;
-	bool	full = 0;
+	bool	died;
+	bool	full;
 	t_philo	*philo;
 
 	philo = arg;
 	start(philo);
+	died = 0;
+	full = 0;
 	while (!died && !full)
 	{
 		if (print_philo_state("is thinking", philo,

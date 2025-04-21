@@ -2,7 +2,7 @@ NAME = philo
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g
 RM = rm -f
-SRC = philo.c helper_funcs.c forks_funcs.c monitor_funcs.c routine_funcs.c
+SRC = philo.c helper_funcs.c forks_funcs.c monitor_funcs.c routine_funcs.c free_funcs.c
 OBJ = $(SRC:%.c=%.o)
 
 all: $(NAME)

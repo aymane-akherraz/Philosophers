@@ -6,7 +6,7 @@
 /*   By: aakherra <aakherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 17:50:38 by aakherra          #+#    #+#             */
-/*   Updated: 2025/04/18 09:05:50 by aakherra         ###   ########.fr       */
+/*   Updated: 2025/04/21 15:43:34 by aakherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,24 @@ long	get_time(void)
 	if (gettimeofday(&tv, NULL))
 		return (-1);
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+}
+
+int	check_args(t_info *p, char **av)
+{
+	p->num_of_philos = ft_atoi(av[1]);
+	p->time_to_die = ft_atoi(av[2]);
+	p->time_to_eat = ft_atoi(av[3]);
+	p->time_to_sleep = ft_atoi(av[4]);
+	if (av[5])
+		p->num_of_meals = ft_atoi(av[5]);
+	else
+		p->num_of_meals = -2;
+	if (p->num_of_philos <= 0 || p->time_to_die <= 0
+		|| p->time_to_eat <= 0 || p->time_to_sleep <= 0
+		|| (p->num_of_meals <= 0 && p->num_of_meals != -2))
+		return (1);
+	p->start_simulation = false;
+	p->philo_died = false;
+	p->full = false;
+	return (0);
 }

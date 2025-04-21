@@ -6,7 +6,7 @@
 /*   By: aakherra <aakherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 17:39:33 by aakherra          #+#    #+#             */
-/*   Updated: 2025/04/20 10:51:03 by aakherra         ###   ########.fr       */
+/*   Updated: 2025/04/21 15:45:42 by aakherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	check_full(t_philo *philos, long meals_count, bool *full, int i)
 
 int	monitor_philos(t_philo *philos, int i, long meals_count, bool *full)
 {
-	long timestamp;
+	long	timestamp;
 	long	last;
 
 	while (i < philos->info->num_of_philos)
@@ -63,7 +63,7 @@ int	monitor_philos(t_philo *philos, int i, long meals_count, bool *full)
 	return (0);
 }
 
-void start(t_philo *philos)
+void	start(t_philo *philos)
 {
 	bool	start;
 

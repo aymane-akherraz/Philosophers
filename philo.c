@@ -6,7 +6,7 @@
 /*   By: aakherra <aakherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 12:36:20 by aakherra          #+#    #+#             */
-/*   Updated: 2025/04/20 10:45:11 by aakherra         ###   ########.fr       */
+/*   Updated: 2025/04/21 15:49:24 by aakherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	join_and_free(t_data *p)
 		pthread_mutex_destroy(&(p->philos[i].mutex));
 		i++;
 	}
-	c(&(p->philos->info->mutex));
+	pthread_mutex_destroy(&(p->philos->info->mutex));
 	free(p->philos);
 	free(p->forks);
 	return (0);
@@ -50,7 +50,7 @@ void	init_philos(t_data *p, t_info *info, int i)
 		p->philos[i].meals_count = -2;
 }
 
-int	create_threads(t_data *p, t_info *info)
+int	alloc_and_init(t_data *p, t_info *info)
 {
 	int	i;
 
@@ -66,7 +66,6 @@ int	create_threads(t_data *p, t_info *info)
 	i = 0;
 	while (i < info->num_of_philos)
 		init_philos(p, info, i++);
-	i = 0;
 	if (info->num_of_philos % 2)
 	{
 		if (info->time_to_eat == info->time_to_sleep)
@@ -74,15 +73,25 @@ int	create_threads(t_data *p, t_info *info)
 		else if (info->time_to_eat > info->time_to_sleep)
 			info->time_to_think = info->time_to_eat;
 	}
+	return (0);
+}
+
+int	create_threads(t_data *p, t_info *info)
+{
+	int	i;
+
+	if (alloc_and_init(p, info))
+		return (1);
 	if (pthread_create(&(p->monitor_id), NULL, &do_monitor, p->philos))
 	{
 		destroy_and_free(p, info);
-		return (1);		
+		return (1);
 	}
+	i = 0;
 	while (i < info->num_of_philos)
 	{
 		pthread_create(&(p->philos[i].thread_id), NULL,
-				&do_routine, &(p->philos[i]));
+			&do_routine, &(p->philos[i]));
 		i++;
 	}
 	init_time(p->philos);
@@ -90,26 +99,6 @@ int	create_threads(t_data *p, t_info *info)
 	info->start_simulation = true;
 	pthread_mutex_unlock(&info->mutex);
 	return (join_and_free(p));
-}
-
-int	check_args(t_info *p, char **av)
-{
-	p->num_of_philos = ft_atoi(av[1]);
-	p->time_to_die = ft_atoi(av[2]);
-	p->time_to_eat = ft_atoi(av[3]);
-	p->time_to_sleep = ft_atoi(av[4]);
-	if (av[5])
-		p->num_of_meals = ft_atoi(av[5]);
-	else
-		p->num_of_meals = -2;
-	if (p->num_of_philos <= 0 || p->time_to_die <= 0
-		|| p->time_to_eat <= 0 || p->time_to_sleep <= 0
-		|| (p->num_of_meals <= 0 && p->num_of_meals != -2))
-		return (1);
-	p->start_simulation = false;
-	p->philo_died = false;
-	p->full = false;
-	return (0);
 }
 
 int	main(int ac, char **av)
