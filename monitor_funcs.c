@@ -6,7 +6,7 @@
 /*   By: aakherra <aakherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 17:39:33 by aakherra          #+#    #+#             */
-/*   Updated: 2025/04/21 15:45:42 by aakherra         ###   ########.fr       */
+/*   Updated: 2025/04/23 08:43:26 by aakherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,17 +65,10 @@ int	monitor_philos(t_philo *philos, int i, long meals_count, bool *full)
 
 void	start(t_philo *philos)
 {
-	bool	start;
-
 	pthread_mutex_lock(&philos->info->mutex);
-	start = philos->info->start_simulation;
+	init_time(philos);
+	philos->info->start_simulation = true;
 	pthread_mutex_unlock(&philos->info->mutex);
-	while (!start)
-	{
-		pthread_mutex_lock(&philos->info->mutex);
-		start = philos->info->start_simulation;
-		pthread_mutex_unlock(&philos->info->mutex);
-	}
 }
 
 void	*do_monitor(void *arg)

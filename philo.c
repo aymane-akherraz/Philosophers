@@ -6,7 +6,7 @@
 /*   By: aakherra <aakherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 12:36:20 by aakherra          #+#    #+#             */
-/*   Updated: 2025/04/21 15:49:24 by aakherra         ###   ########.fr       */
+/*   Updated: 2025/04/22 11:09:32 by aakherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ int	create_threads(t_data *p, t_info *info)
 
 	if (alloc_and_init(p, info))
 		return (1);
+	info->start_simulation = false;
 	if (pthread_create(&(p->monitor_id), NULL, &do_monitor, p->philos))
 	{
 		destroy_and_free(p, info);
@@ -94,10 +95,6 @@ int	create_threads(t_data *p, t_info *info)
 			&do_routine, &(p->philos[i]));
 		i++;
 	}
-	init_time(p->philos);
-	pthread_mutex_lock(&info->mutex);
-	info->start_simulation = true;
-	pthread_mutex_unlock(&info->mutex);
 	return (join_and_free(p));
 }
 

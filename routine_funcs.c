@@ -6,7 +6,7 @@
 /*   By: aakherra <aakherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 17:50:20 by aakherra          #+#    #+#             */
-/*   Updated: 2025/04/21 16:05:47 by aakherra         ###   ########.fr       */
+/*   Updated: 2025/04/23 08:43:35 by aakherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,21 @@ int	print_eat_state(char *state, t_philo *p, long sleep_time)
 	return (0);
 }
 
+void	check_flag(t_philo	*philo)
+{
+	bool	start;
+
+	pthread_mutex_lock(&philo->mutex);
+	start = philo->info->start_simulation;
+	pthread_mutex_unlock(&philo->mutex);
+	while (!start)
+	{
+		pthread_mutex_lock(&philo->mutex);
+		start = philo->info->start_simulation;
+		pthread_mutex_unlock(&philo->mutex);
+	}
+}
+
 void	*do_routine(void *arg)
 {
 	bool	died;
@@ -75,7 +90,7 @@ void	*do_routine(void *arg)
 	t_philo	*philo;
 
 	philo = arg;
-	start(philo);
+	check_flag(philo);
 	died = 0;
 	full = 0;
 	while (!died && !full)

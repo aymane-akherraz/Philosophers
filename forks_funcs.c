@@ -6,7 +6,7 @@
 /*   By: aakherra <aakherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 17:45:52 by aakherra          #+#    #+#             */
-/*   Updated: 2025/04/21 15:55:24 by aakherra         ###   ########.fr       */
+/*   Updated: 2025/04/23 08:30:23 by aakherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,15 +42,15 @@ int	init_mutex(t_data *p, t_info *info)
 int	helper(t_philo *philo)
 {
 	pthread_mutex_lock(philo->left_fork);
+	philo->has_left_fork = true;
 	if (print_philo_state("has taken a fork", philo, 0))
 		return (1);
-	philo->has_left_fork = true;
 	if (philo->info->num_of_philos > 1)
 	{
 		pthread_mutex_lock(philo->right_fork);
+		philo->has_right_fork = true;
 		if (print_philo_state("has taken a fork", philo, 0))
 			return (1);
-		philo->has_right_fork = true;
 	}
 	else
 	{
@@ -66,13 +66,13 @@ int	pick_up_fork(t_philo *philo)
 	if (philo->philo_id % 2)
 	{
 		pthread_mutex_lock(philo->right_fork);
-		if (print_philo_state("has taken a fork", philo, 0))
-			return (1);
 		philo->has_right_fork = true;
-		pthread_mutex_lock(philo->left_fork);
 		if (print_philo_state("has taken a fork", philo, 0))
 			return (1);
+		pthread_mutex_lock(philo->left_fork);
 		philo->has_left_fork = true;
+		if (print_philo_state("has taken a fork", philo, 0))
+			return (1);
 	}
 	else
 		return (helper(philo));
