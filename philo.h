@@ -6,7 +6,7 @@
 /*   By: aakherra <aakherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 12:49:35 by aakherra          #+#    #+#             */
-/*   Updated: 2025/04/21 15:43:48 by aakherra         ###   ########.fr       */
+/*   Updated: 2025/04/23 08:54:47 by aakherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ int		init_mutex(t_data *p, t_info *info);
 int		pick_up_fork(t_philo *philo);
 int		check_args(t_info *p, char **av);
 int		monitor_philos(t_philo *philos, int i, long my_var, bool *full);
-void	set_philo_info(t_philo *philo, long timestamp);
 void	destroy_forks(pthread_mutex_t *mutex, int i);
 void	destroy_and_free(t_data *p, t_info *info);
 void	destroy_philos(t_philo *philos, int i);

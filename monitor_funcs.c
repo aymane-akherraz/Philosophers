@@ -6,7 +6,7 @@
 /*   By: aakherra <aakherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 17:39:33 by aakherra          #+#    #+#             */
-/*   Updated: 2025/04/23 08:43:26 by aakherra         ###   ########.fr       */
+/*   Updated: 2025/04/23 09:37:38 by aakherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ void	*do_monitor(void *arg)
 			full = true;
 		if (monitor_philos(philos, i, meals_count, &full))
 			return (arg);
+		usleep(1000);
 	}
 	pthread_mutex_lock(&philos->info->mutex);
 	philos->info->full = true;

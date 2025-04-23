@@ -6,7 +6,7 @@
 /*   By: aakherra <aakherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 17:50:20 by aakherra          #+#    #+#             */
-/*   Updated: 2025/04/23 08:43:35 by aakherra         ###   ########.fr       */
+/*   Updated: 2025/04/23 09:08:51 by aakherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,6 @@ int	print_philo_state(char *state, t_philo *p, long sleep_time)
 	return (0);
 }
 
-void	set_philo_info(t_philo *philo, long last_meal_time)
-{
-	pthread_mutex_lock(&philo->mutex);
-	philo->last_meal_time = last_meal_time;
-	if (philo->meals_count >= 0)
-		philo->meals_count++;
-	pthread_mutex_unlock(&philo->mutex);
-}
-
 int	print_eat_state(char *state, t_philo *p, long sleep_time)
 {
 	long	timestamp;
@@ -63,7 +54,11 @@ int	print_eat_state(char *state, t_philo *p, long sleep_time)
 	pthread_mutex_lock(&p->info->mutex);
 	printf("%ld %d %s\n", timestamp, p->philo_id + 1, state);
 	pthread_mutex_unlock(&p->info->mutex);
-	set_philo_info(p, timestamp);
+	pthread_mutex_lock(&p->mutex);
+	p->last_meal_time = timestamp;
+	if (p->meals_count >= 0)
+		p->meals_count++;
+	pthread_mutex_unlock(&p->mutex);
 	usleep(sleep_time);
 	return (0);
 }

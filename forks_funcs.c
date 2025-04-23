@@ -6,7 +6,7 @@
 /*   By: aakherra <aakherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 17:45:52 by aakherra          #+#    #+#             */
-/*   Updated: 2025/04/23 08:30:23 by aakherra         ###   ########.fr       */
+/*   Updated: 2025/04/23 09:25:38 by aakherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	helper(t_philo *philo)
 	else
 	{
 		while (!is_died_full(philo))
-			;
+			usleep(100);
 		return (1);
 	}
 	return (0);
